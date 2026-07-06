@@ -38,12 +38,21 @@ func (p PathCheck) dirs(ctx *Context) []string {
 	}
 }
 
-func (p PathCheck) shellRC(ctx *Context) string {
+// shellRCs 返回需要写入 PATH 的 shell 配置文件列表。
+// macOS 的 Terminal/iTerm 以 login shell 启动 bash，只读 ~/.bash_profile 不读 ~/.bashrc，
+// 老 Intel Mac(默认 bash)必须写 .bash_profile 才能生效;.bashrc 一并写入覆盖非 login 场景。
+func (p PathCheck) shellRCs(ctx *Context) []string {
 	shell := os.Getenv("SHELL")
 	if strings.Contains(shell, "bash") {
-		return filepath.Join(ctx.Home, ".bashrc")
+		if ctx.OS == "darwin" {
+			return []string{
+				filepath.Join(ctx.Home, ".bash_profile"),
+				filepath.Join(ctx.Home, ".bashrc"),
+			}
+		}
+		return []string{filepath.Join(ctx.Home, ".bashrc")}
 	}
-	return filepath.Join(ctx.Home, ".zshrc")
+	return []string{filepath.Join(ctx.Home, ".zshrc")}
 }
 
 // winUserPath 从注册表读取当前用户的 PATH(HKCU\Environment)。
@@ -75,11 +84,13 @@ func (p PathCheck) Detect(ctx *Context) (Status, string) {
 		}
 		return StatusOK, "PATH 已包含工具目录"
 	}
-	data, err := os.ReadFile(p.shellRC(ctx))
-	if err == nil && strings.Contains(string(data), pathBegin) {
-		return StatusOK, "已写入 " + p.shellRC(ctx)
+	for _, rc := range p.shellRCs(ctx) {
+		data, err := os.ReadFile(rc)
+		if err != nil || !strings.Contains(string(data), pathBegin) {
+			return StatusFixable, rc + " 未写入 PATH"
+		}
 	}
-	return StatusFixable, "shell 配置未写入 PATH"
+	return StatusOK, "已写入 " + strings.Join(p.shellRCs(ctx), "、")
 }
 
 func (p PathCheck) Fix(ctx *Context) error {
@@ -124,10 +135,6 @@ func (p PathCheck) Fix(ctx *Context) error {
 		return nil
 	}
 
-	rc := p.shellRC(ctx)
-	if data, _ := os.ReadFile(rc); strings.Contains(string(data), pathBegin) {
-		return nil
-	}
 	var b strings.Builder
 	b.WriteString("\n" + pathBegin + "\n")
 	for _, d := range p.dirs(ctx) {
@@ -135,13 +142,21 @@ func (p PathCheck) Fix(ctx *Context) error {
 	}
 	b.WriteString(pathEnd + "\n")
 
-	f, err := os.OpenFile(rc, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
-	if err != nil {
-		return err
+	for _, rc := range p.shellRCs(ctx) {
+		if data, _ := os.ReadFile(rc); strings.Contains(string(data), pathBegin) {
+			continue
+		}
+		f, err := os.OpenFile(rc, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
+		if err != nil {
+			return err
+		}
+		_, err = f.WriteString(b.String())
+		f.Close()
+		if err != nil {
+			return err
+		}
 	}
-	defer f.Close()
-	_, err = f.WriteString(b.String())
-	return err
+	return nil
 }
 
 func (p PathCheck) Verify(ctx *Context) error {

@@ -33,7 +33,7 @@ func main() {
 	fmt.Println("==========================================")
 	fmt.Printf("\n>> %s\n", url)
 	fmt.Println("正在打开浏览器，稍候...")
-	fmt.Println("按 Ctrl+C 退出\n")
+	fmt.Println("按 Ctrl+C 退出")
 
 	// 略等一拍再开浏览器，让 server 先就绪
 	go func() {
