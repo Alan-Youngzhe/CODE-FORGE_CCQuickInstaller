@@ -6,11 +6,49 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 )
 
 // SettingsPath 返回 Claude Code 的配置文件路径。
 func SettingsPath(home string) string {
 	return filepath.Join(home, ".claude", "settings.json")
+}
+
+// kimiSettings 返回锻码工坊活动统一的 settings.json 模板,ANTHROPIC_AUTH_TOKEN 填入用户粘贴的 Key。
+// Key 通过 JSON 序列化注入(而非字符串拼接),含引号、反斜杠等特殊字符也不会破坏 JSON。
+func kimiSettings(key string) map[string]any {
+	return map[string]any{
+		"env": map[string]string{
+			"ANTHROPIC_AUTH_TOKEN":               key,
+			"ANTHROPIC_BASE_URL":                 "https://api.kimi.com/coding/",
+			"ANTHROPIC_DEFAULT_HAIKU_MODEL":      "kimi-for-coding",
+			"ANTHROPIC_DEFAULT_SONNET_MODEL":     "kimi-for-coding",
+			"ANTHROPIC_DEFAULT_OPUS_MODEL":       "kimi-for-coding",
+			"ANTHROPIC_MODEL":                    "kimi-for-coding",
+			"CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1",
+		},
+		"theme":                             "auto",
+		"skipDangerousModePermissionPrompt": true,
+		"includeCoAuthoredBy":               false,
+	}
+}
+
+// ImportKey 把用户粘贴的 Kimi API Key 注入内置模板后写入 ~/.claude/settings.json。
+// 活动主流程只需这一个 Key,参会者全程不接触 JSON;写入复用 ImportSettings
+// (0600 权限、Windows 剔除 hooks 的逻辑保持一致)。
+func ImportKey(home, key string) error {
+	key = strings.TrimSpace(key)
+	if key == "" {
+		return fmt.Errorf("API Key 不能为空")
+	}
+	if strings.ContainsAny(key, " \t\r\n") {
+		return fmt.Errorf("API Key 不能包含空格或换行,请检查是否粘贴完整")
+	}
+	out, err := json.Marshal(kimiSettings(key))
+	if err != nil {
+		return err
+	}
+	return ImportSettings(home, string(out))
 }
 
 // ImportSettings 校验内容为合法 JSON 后,整份写入 ~/.claude/settings.json。

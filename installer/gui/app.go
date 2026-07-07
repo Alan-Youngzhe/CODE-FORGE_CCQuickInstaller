@@ -54,6 +54,14 @@ func (a *App) ImportConfig(content string) error {
 	return engine.ImportSettings(a.ec.Home, content)
 }
 
+// ImportKey 把用户粘贴的 Kimi API Key 注入内置模板后写入配置(活动主流程)。
+func (a *App) ImportKey(key string) error {
+	if a.ec == nil {
+		return errEngine
+	}
+	return engine.ImportKey(a.ec.Home, key)
+}
+
 // RemoveConfig 移除当前配置(想换配置时先移除再导入)。
 func (a *App) RemoveConfig() error {
 	if a.ec == nil {
