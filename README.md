@@ -46,15 +46,15 @@ chmod +x CCQuickInstaller-mac
 ## 使用流程
 
 1. 点击 **RUN INSTALL** — 自动检测并安装 Node.js、Claude Code，修复 PATH
-2. 在 **import_config** 面板粘贴你的 `settings.json`，配置模型与 API Key
+2. 在 **import_config** 面板粘贴 Kimi API Key（`sk-` 开头），点 **IMPORT KEY** — 安装器用内置模板自动生成配置，全程无需接触 JSON
 3. 打开一个**新终端**，输入 `claude` 开始使用
 4.（可选）在 **cc-switch** 面板勾选安装 [cc-switch](https://github.com/farion1231/cc-switch) — 多服务商配置切换工具，装完可一键在不同 API / 模型间切换；默认不安装，安装位置可自选
 
 ---
 
-## settings.json 示例
+## settings.json 示例（高级模式）
 
-使用国内模型（以 Kimi K2 为例）：
+主流程只需粘贴 Kimi API Key。接入其他服务商时，勾选「高级模式」粘贴完整 `settings.json`（以 Kimi K2 为例）：
 
 ```json
 {
