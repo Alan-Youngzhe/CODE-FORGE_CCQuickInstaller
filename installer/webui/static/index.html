@@ -136,9 +136,21 @@
 
     <section class="panel">
       <span class="label">[ import_config ]</span>
-      <div class="desc">粘贴一份 settings.json &gt; 写入 ~/.claude/settings.json（想换配置先移除再导入）</div>
+      <div class="desc">粘贴现场发的 Kimi API Key &gt; 自动生成并写入 ~/.claude/settings.json，全程无需接触 JSON</div>
       <div class="status" id="cfgStatus">scanning…</div>
-      <textarea id="cfgText" spellcheck="false" placeholder='> paste settings.json
+      <div class="row">
+        <input type="text" id="keyInput" class="pathinput" spellcheck="false" autocomplete="off" placeholder="> 粘贴 Kimi API Key（sk-...）" />
+      </div>
+      <div class="row" style="margin-top: 10px;">
+        <button class="primary" id="btnImportKey">IMPORT KEY</button>
+        <button id="btnRemove">REMOVE</button>
+        <label class="opt" style="margin-left:auto;">
+          <input type="checkbox" id="advToggle" />
+          <span class="badge">高级模式：粘贴完整 settings.json</span>
+        </label>
+      </div>
+      <div id="advBox" style="display:none; margin-top:12px;">
+        <textarea id="cfgText" spellcheck="false" placeholder='> paste settings.json
 {
   "env": {
     "ANTHROPIC_BASE_URL": "https://api.moonshot.cn/anthropic",
@@ -146,9 +158,9 @@
     "ANTHROPIC_MODEL": "kimi-k2-turbo-preview"
   }
 }'></textarea>
-      <div class="row" style="margin-top: 10px;">
-        <button class="primary" id="btnImport">IMPORT</button>
-        <button id="btnRemove">REMOVE</button>
+        <div class="row" style="margin-top: 10px;">
+          <button id="btnImport">IMPORT JSON</button>
+        </div>
       </div>
       <div class="toast" id="toast"></div>
     </section>
@@ -206,11 +218,15 @@
       } catch { $("sys").textContent = "· env?"; }
     }
 
+    let configured = false;
+    let confirmArmed = null; // 已有配置时,首次点击导入先提示覆盖,再次点击同一按钮才执行
+
     async function loadConfig() {
       try {
         const r = await fetch("/api/config");
         const c = await r.json();
         const s = $("cfgStatus");
+        configured = c.configured;
         if (c.configured) {
           s.textContent = "● 已导入配置 (~/.claude/settings.json)";
           s.className = "status ok";
@@ -220,6 +236,13 @@
           s.className = "status";
         }
       } catch { $("cfgStatus").textContent = "× 读取配置失败"; }
+    }
+
+    function needOverwriteConfirm(which) {
+      if (!configured || confirmArmed === which) { confirmArmed = null; return false; }
+      confirmArmed = which;
+      toast("⚠ 已存在配置，导入将覆盖原有内容 — 再次点击同一按钮确认", "err");
+      return true;
     }
 
     $("btnInstall").onclick = () => {
@@ -244,7 +267,7 @@
           if (result.ok) {
             $("installBadge").textContent = "[ok] all ready";
             $("installBadge").className = "badge ok";
-            appendLog("\n✅ 环境就绪。下一步：\n  1. 在下方 [import_config] 导入你的 settings.json\n  2. 打开新终端，输入 claude 开始使用\n  ⚠ claude 是命令行工具，需在终端中运行，不可直接双击\n");
+            appendLog("\n✅ 环境就绪。下一步：\n  1. 在下方 [import_config] 粘贴现场发的 Kimi API Key\n  2. 打开新终端，输入 claude 开始使用\n  ⚠ claude 是命令行工具，需在终端中运行，不可直接双击\n");
           } else {
             $("installBadge").textContent = `[!] ${result.failed} failed`;
             $("installBadge").className = "badge warn";
@@ -264,9 +287,28 @@
       };
     };
 
+    $("btnImportKey").onclick = async () => {
+      const key = $("keyInput").value.trim();
+      if (!key) return toast("请先粘贴现场发的 Kimi API Key", "err");
+      if (/\s/.test(key)) return toast("Key 中含有空格或换行，请检查是否粘贴完整", "err");
+      if (needOverwriteConfirm("key")) return;
+      try {
+        const r = await fetch("/api/config", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key }),
+        });
+        if (!r.ok) throw new Error(await r.text());
+        toast("✓ 配置完成，已写入 ~/.claude/settings.json", "ok");
+        $("keyInput").value = "";
+        await loadConfig();
+      } catch (e) { toast("× 导入失败: " + e, "err"); }
+    };
+
     $("btnImport").onclick = async () => {
       const text = $("cfgText").value.trim();
       if (!text) return toast("请先粘贴 settings.json 内容", "err");
+      if (needOverwriteConfirm("json")) return;
       try {
         const r = await fetch("/api/config", {
           method: "POST",
@@ -278,6 +320,10 @@
         await loadConfig();
       } catch (e) { toast("× 导入失败: " + e, "err"); }
     };
+
+    $("keyInput").oninput = () => { confirmArmed = null; };
+    $("cfgText").oninput = () => { confirmArmed = null; };
+    $("advToggle").onchange = (e) => { $("advBox").style.display = e.target.checked ? "block" : "none"; };
 
     $("btnRemove").onclick = async () => {
       try {

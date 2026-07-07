@@ -9,7 +9,9 @@ import (
 	"claude-toolbox-installer/engine"
 )
 
+// configImportReq 二选一:key 走内置 Kimi 模板(活动主流程),content 导入完整 JSON(高级模式)。
 type configImportReq struct {
+	Key     string `json:"key"`
 	Content string `json:"content"`
 }
 
@@ -93,8 +95,18 @@ func handleConfig(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "invalid JSON", 400)
 			return
 		}
-		if err := engine.ImportSettings(ec.Home, req.Content); err != nil {
-			http.Error(w, err.Error(), 500)
+		var importErr error
+		switch {
+		case req.Key != "":
+			importErr = engine.ImportKey(ec.Home, req.Key)
+		case req.Content != "":
+			importErr = engine.ImportSettings(ec.Home, req.Content)
+		default:
+			http.Error(w, "key 与 content 至少提供一个", 400)
+			return
+		}
+		if importErr != nil {
+			http.Error(w, importErr.Error(), 500)
 			return
 		}
 		w.WriteHeader(http.StatusNoContent)

@@ -46,7 +46,22 @@ func TestBindingSmoke(t *testing.T) {
 		t.Error("非法 JSON 应导入失败")
 	}
 
-	// 4. 移除后回到未配置。
+	// 4. 单 Key 导入(活动主流程):Key 注入内置 Kimi 模板后写入。
+	if err := app.ImportKey("sk-kimi-2"); err != nil {
+		t.Fatal("ImportKey:", err)
+	}
+	data, err = os.ReadFile(filepath.Join(sb, ".claude", "settings.json"))
+	if err != nil {
+		t.Fatal("读取沙箱 settings.json:", err)
+	}
+	if !strings.Contains(string(data), "sk-kimi-2") || !strings.Contains(string(data), "api.kimi.com") {
+		t.Errorf("单 Key 导入未按模板写入: %s", data)
+	}
+	if err := app.ImportKey("  "); err == nil {
+		t.Error("空 Key 应导入失败")
+	}
+
+	// 5. 移除后回到未配置。
 	if err := app.RemoveConfig(); err != nil {
 		t.Fatal("RemoveConfig:", err)
 	}
