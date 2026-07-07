@@ -55,12 +55,17 @@ jobs:
 
       - name: Copy to release name
         shell: pwsh
-        run: Copy-Item installer\gui\build\bin\CCQuickInstaller.exe CCQuickInstaller-${{ github.ref_name }}-win-x64.exe
+        # 同时产出带版本号和固定名两份：固定名让 releases/latest/download/ 直链永远有效（教程/镜像直链用）
+        run: |
+          Copy-Item installer\gui\build\bin\CCQuickInstaller.exe CCQuickInstaller-${{ github.ref_name }}-win-x64.exe
+          Copy-Item installer\gui\build\bin\CCQuickInstaller.exe CCQuickInstaller-win-x64.exe
 
       - uses: actions/upload-artifact@v4
         with:
           name: win-exe
-          path: CCQuickInstaller-${{ github.ref_name }}-win-x64.exe
+          path: |
+            CCQuickInstaller-${{ github.ref_name }}-win-x64.exe
+            CCQuickInstaller-win-x64.exe
 
   release:
     name: Publish Release
@@ -83,6 +88,7 @@ jobs:
           files: |
             CCQuickInstaller-mac
             CCQuickInstaller-${{ github.ref_name }}-win-x64.exe
+            CCQuickInstaller-win-x64.exe
           body: |
             ## Claude Code Quick Installer ${{ github.ref_name }}
 
@@ -92,7 +98,13 @@ jobs:
 
             ### macOS — 推荐：一行命令（最省事）
 
-            打开终端，粘贴以下命令回车即可，全程自动：
+            打开终端，粘贴以下命令回车即可（国内推荐，入口也走加速镜像）：
+
+            ```bash
+            curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/Alan-Youngzhe/CC_quick_installer/main/install.sh | bash
+            ```
+
+            有梯子或镜像不可用时，可用直连版：
 
             ```bash
             curl -fsSL https://raw.githubusercontent.com/Alan-Youngzhe/CC_quick_installer/main/install.sh | bash
@@ -104,6 +116,7 @@ jobs:
 
             ```bash
             cd ~/Downloads
+            xattr -dr com.apple.quarantine CCQuickInstaller-mac
             chmod +x CCQuickInstaller-mac
             ./CCQuickInstaller-mac
             ```
@@ -114,11 +127,18 @@ jobs:
 
             ### Windows x64
 
-            下载本页的 `CCQuickInstaller-${{ github.ref_name }}-win-x64.exe`，双击运行，图形界面自动弹出。
+            下载本页的 `CCQuickInstaller-${{ github.ref_name }}-win-x64.exe`（或固定名 `CCQuickInstaller-win-x64.exe`），双击运行，图形界面自动弹出。
+
+            国内下载慢可用加速直链：
+
+            ```
+            https://ghfast.top/https://github.com/Alan-Youngzhe/CC_quick_installer/releases/latest/download/CCQuickInstaller-win-x64.exe
+            ```
 
             ---
 
             ### 安装完成后
 
-            1. 在「import_config」面板粘贴你的 `settings.json`（配置模型与 API Key）
-            2. 打开**新终端**，输入 `claude` 开始使用
+            1. 点 **RUN INSTALL**，等待「✅ 环境就绪」
+            2. 在「import_config」面板粘贴 Kimi API Key（`sk-` 开头），点 **IMPORT KEY** — 无需接触任何 JSON；接入其他服务商用「高级模式」粘贴完整 `settings.json`
+            3. 打开**新终端**（Windows 用自动弹出的新 CMD），输入 `claude` 开始使用
