@@ -30,11 +30,14 @@ func TestImportKey(t *testing.T) {
 
 	wantEnv := map[string]string{
 		"ANTHROPIC_AUTH_TOKEN":               "sk-test-123",
-		"ANTHROPIC_BASE_URL":                 "https://api.kimi.com/coding/",
-		"ANTHROPIC_DEFAULT_HAIKU_MODEL":      "kimi-for-coding",
-		"ANTHROPIC_DEFAULT_SONNET_MODEL":     "kimi-for-coding",
-		"ANTHROPIC_DEFAULT_OPUS_MODEL":       "kimi-for-coding",
-		"ANTHROPIC_MODEL":                    "kimi-for-coding",
+		"ANTHROPIC_BASE_URL":                 "https://api.deepseek.com/anthropic",
+		"ANTHROPIC_MODEL":                    "deepseek-v4-pro[1m]",
+		"ANTHROPIC_DEFAULT_OPUS_MODEL":       "deepseek-v4-pro[1m]",
+		"ANTHROPIC_DEFAULT_SONNET_MODEL":     "deepseek-v4-pro[1m]",
+		"ANTHROPIC_DEFAULT_HAIKU_MODEL":      "deepseek-v4-flash",
+		"CLAUDE_CODE_SUBAGENT_MODEL":         "deepseek-v4-flash",
+		"CLAUDE_CODE_EFFORT_LEVEL":           "max",
+		"CLAUDE_CODE_AUTO_COMPACT_WINDOW":    "786432",
 		"CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1",
 	}
 	for k, want := range wantEnv {

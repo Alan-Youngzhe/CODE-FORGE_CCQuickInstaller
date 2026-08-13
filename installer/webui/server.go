@@ -9,7 +9,7 @@ import (
 	"claude-toolbox-installer/engine"
 )
 
-// configImportReq 二选一:key 走内置 Kimi 模板(活动主流程),content 导入完整 JSON(高级模式)。
+// configImportReq 二选一:key 走内置 DeepSeek 模板(主流程),content 导入完整 JSON(高级模式)。
 type configImportReq struct {
 	Key     string `json:"key"`
 	Content string `json:"content"`

@@ -54,7 +54,7 @@ func (a *App) ImportConfig(content string) error {
 	return engine.ImportSettings(a.ec.Home, content)
 }
 
-// ImportKey 把用户粘贴的 Kimi API Key 注入内置模板后写入配置(活动主流程)。
+// ImportKey 把用户粘贴的 DeepSeek API Key 注入内置模板后写入配置(主流程)。
 func (a *App) ImportKey(key string) error {
 	if a.ec == nil {
 		return errEngine

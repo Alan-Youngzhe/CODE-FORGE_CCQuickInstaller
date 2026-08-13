@@ -14,17 +14,22 @@ func SettingsPath(home string) string {
 	return filepath.Join(home, ".claude", "settings.json")
 }
 
-// kimiSettings 返回锻码工坊活动统一的 settings.json 模板,ANTHROPIC_AUTH_TOKEN 填入用户粘贴的 Key。
+// deepseekSettings 返回 Alan AI 粉丝版统一的 settings.json 模板,ANTHROPIC_AUTH_TOKEN 填入用户粘贴的 Key。
+// 模型与参数取自 DeepSeek 官方 Claude Code 集成文档:
+// https://api-docs.deepseek.com/quick_start/agent_integrations/claude_code
 // Key 通过 JSON 序列化注入(而非字符串拼接),含引号、反斜杠等特殊字符也不会破坏 JSON。
-func kimiSettings(key string) map[string]any {
+func deepseekSettings(key string) map[string]any {
 	return map[string]any{
 		"env": map[string]string{
 			"ANTHROPIC_AUTH_TOKEN":               key,
-			"ANTHROPIC_BASE_URL":                 "https://api.kimi.com/coding/",
-			"ANTHROPIC_DEFAULT_HAIKU_MODEL":      "kimi-for-coding",
-			"ANTHROPIC_DEFAULT_SONNET_MODEL":     "kimi-for-coding",
-			"ANTHROPIC_DEFAULT_OPUS_MODEL":       "kimi-for-coding",
-			"ANTHROPIC_MODEL":                    "kimi-for-coding",
+			"ANTHROPIC_BASE_URL":                 "https://api.deepseek.com/anthropic",
+			"ANTHROPIC_MODEL":                    "deepseek-v4-pro[1m]",
+			"ANTHROPIC_DEFAULT_OPUS_MODEL":       "deepseek-v4-pro[1m]",
+			"ANTHROPIC_DEFAULT_SONNET_MODEL":     "deepseek-v4-pro[1m]",
+			"ANTHROPIC_DEFAULT_HAIKU_MODEL":      "deepseek-v4-flash",
+			"CLAUDE_CODE_SUBAGENT_MODEL":         "deepseek-v4-flash",
+			"CLAUDE_CODE_EFFORT_LEVEL":           "max",
+			"CLAUDE_CODE_AUTO_COMPACT_WINDOW":    "786432",
 			"CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1",
 		},
 		"theme":                             "auto",
@@ -33,8 +38,8 @@ func kimiSettings(key string) map[string]any {
 	}
 }
 
-// ImportKey 把用户粘贴的 Kimi API Key 注入内置模板后写入 ~/.claude/settings.json。
-// 活动主流程只需这一个 Key,参会者全程不接触 JSON;写入复用 ImportSettings
+// ImportKey 把用户粘贴的 DeepSeek API Key 注入内置模板后写入 ~/.claude/settings.json。
+// 主流程只需这一个 Key,用户全程不接触 JSON;写入复用 ImportSettings
 // (0600 权限、Windows 剔除 hooks 的逻辑保持一致)。
 func ImportKey(home, key string) error {
 	key = strings.TrimSpace(key)
@@ -44,7 +49,7 @@ func ImportKey(home, key string) error {
 	if strings.ContainsAny(key, " \t\r\n") {
 		return fmt.Errorf("API Key 不能包含空格或换行,请检查是否粘贴完整")
 	}
-	out, err := json.Marshal(kimiSettings(key))
+	out, err := json.Marshal(deepseekSettings(key))
 	if err != nil {
 		return err
 	}

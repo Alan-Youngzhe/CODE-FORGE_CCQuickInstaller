@@ -46,15 +46,15 @@ func TestBindingSmoke(t *testing.T) {
 		t.Error("非法 JSON 应导入失败")
 	}
 
-	// 4. 单 Key 导入(活动主流程):Key 注入内置 Kimi 模板后写入。
-	if err := app.ImportKey("sk-kimi-2"); err != nil {
+	// 4. 单 Key 导入(主流程):Key 注入内置 DeepSeek 模板后写入。
+	if err := app.ImportKey("sk-deepseek-2"); err != nil {
 		t.Fatal("ImportKey:", err)
 	}
 	data, err = os.ReadFile(filepath.Join(sb, ".claude", "settings.json"))
 	if err != nil {
 		t.Fatal("读取沙箱 settings.json:", err)
 	}
-	if !strings.Contains(string(data), "sk-kimi-2") || !strings.Contains(string(data), "api.kimi.com") {
+	if !strings.Contains(string(data), "sk-deepseek-2") || !strings.Contains(string(data), "api.deepseek.com") {
 		t.Errorf("单 Key 导入未按模板写入: %s", data)
 	}
 	if err := app.ImportKey("  "); err == nil {

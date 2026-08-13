@@ -1,4 +1,4 @@
-# CODE-FORGE · Claude Code Quick Installer
+# Alan AI · Claude Code Quick Installer
 
 > 一键安装 Claude Code — 用户态、零依赖、国内直连，无需管理员权限、无需科学上网。
 
@@ -46,7 +46,7 @@ chmod +x CCQuickInstaller-mac
 ## 使用流程
 
 1. 点击 **RUN INSTALL** — 自动检测并安装 Node.js、Claude Code，修复 PATH
-2. 在 **import_config** 面板粘贴 Kimi API Key（`sk-` 开头），点 **IMPORT KEY** — 安装器用内置模板自动生成配置，全程无需接触 JSON
+2. 在 **import_config** 面板粘贴 DeepSeek API Key（`sk-` 开头，[platform.deepseek.com](https://platform.deepseek.com) 获取），点 **IMPORT KEY** — 安装器用内置模板自动生成配置，全程无需接触 JSON
 3. 打开一个**新终端**，输入 `claude` 开始使用
 4.（可选）在 **cc-switch** 面板勾选安装 [cc-switch](https://github.com/farion1231/cc-switch) — 多服务商配置切换工具，装完可一键在不同 API / 模型间切换；默认不安装，安装位置可自选
 
@@ -54,14 +54,14 @@ chmod +x CCQuickInstaller-mac
 
 ## settings.json 示例（高级模式）
 
-主流程只需粘贴 Kimi API Key。接入其他服务商时，勾选「高级模式」粘贴完整 `settings.json`（以 Kimi K2 为例）：
+主流程只需粘贴 DeepSeek API Key（内置模板按 [DeepSeek 官方 Claude Code 集成文档](https://api-docs.deepseek.com/quick_start/agent_integrations/claude_code) 生成）。接入其他服务商时，勾选「高级模式」粘贴完整 `settings.json`（以 DeepSeek 为例）：
 
 ```json
 {
   "env": {
-    "ANTHROPIC_BASE_URL": "https://api.moonshot.cn/anthropic",
+    "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
     "ANTHROPIC_AUTH_TOKEN": "sk-...",
-    "ANTHROPIC_MODEL": "kimi-k2-turbo-preview"
+    "ANTHROPIC_MODEL": "deepseek-v4-pro[1m]"
   }
 }
 ```

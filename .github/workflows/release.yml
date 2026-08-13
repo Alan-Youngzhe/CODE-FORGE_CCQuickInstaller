@@ -140,5 +140,5 @@ jobs:
             ### 安装完成后
 
             1. 点 **RUN INSTALL**，等待「✅ 环境就绪」
-            2. 在「import_config」面板粘贴 Kimi API Key（`sk-` 开头），点 **IMPORT KEY** — 无需接触任何 JSON；接入其他服务商用「高级模式」粘贴完整 `settings.json`
+            2. 在「import_config」面板粘贴 DeepSeek API Key（`sk-` 开头），点 **IMPORT KEY** — 无需接触任何 JSON；接入其他服务商用「高级模式」粘贴完整 `settings.json`
             3. 打开**新终端**（Windows 用自动弹出的新 CMD），输入 `claude` 开始使用

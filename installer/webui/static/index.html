@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CODE-FORGE · Quick Installer</title>
+  <title>Alan AI · Quick Installer</title>
   <style>
     :root {
       --bg: #070b08;
@@ -115,14 +115,14 @@
 </head>
 <body>
   <div class="wrap">
-    <pre class="banner"> ██████╗  ██████╗ ██████╗ ███████╗      ███████╗ ██████╗ ██████╗  ██████╗ ███████╗
-██╔════╝ ██╔═══██╗██╔══██╗██╔════╝      ██╔════╝██╔═══██╗██╔══██╗██╔════╝██╔════╝
-██║      ██║   ██║██║  ██║█████╗   ─── █████╗  ██║   ██║██████╔╝██║  ███╗█████╗
-██║      ██║   ██║██║  ██║██╔══╝   ─── ██╔══╝  ██║   ██║██╔══██╗██║   ██║██╔══╝
-╚██████╗ ╚██████╔╝██████╔╝███████╗     ██║     ╚██████╔╝██║  ██╗╚██████╔╝███████╗
- ╚═════╝  ╚═════╝ ╚═════╝ ╚══════╝     ╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝</pre>
+    <pre class="banner"> █████╗ ██╗      █████╗ ███╗   ██╗      █████╗ ██╗
+██╔══██╗██║     ██╔══██╗████╗  ██║     ██╔══██╗██║
+███████║██║     ███████║██╔██╗ ██║ ─── ███████║██║
+██╔══██║██║     ██╔══██║██║╚██╗██║ ─── ██╔══██║██║
+██║  ██║███████╗██║  ██║██║ ╚████║     ██║  ██║██║
+╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝     ╚═╝  ╚═╝╚═╝</pre>
     <div class="installer-tag">▌ QUICK INSTALLER</div>
-    <div class="sub">// CODE-FORGE · 一键安装 Claude Code · 用户态零依赖 · 国内直连 <span id="sys">booting…</span><span class="blink">_</span></div>
+    <div class="sub">// ALAN AI · 一键安装 Claude Code · 用户态零依赖 · 国内直连 <span id="sys">booting…</span><span class="blink">_</span></div>
 
     <section class="panel">
       <span class="label">[ env_doctor ]</span>
@@ -136,10 +136,10 @@
 
     <section class="panel">
       <span class="label">[ import_config ]</span>
-      <div class="desc">粘贴现场发的 Kimi API Key &gt; 自动生成并写入 ~/.claude/settings.json，全程无需接触 JSON</div>
+      <div class="desc">粘贴你的 DeepSeek API Key（platform.deepseek.com 获取）&gt; 自动生成并写入 ~/.claude/settings.json，全程无需接触 JSON</div>
       <div class="status" id="cfgStatus">scanning…</div>
       <div class="row">
-        <input type="text" id="keyInput" class="pathinput" spellcheck="false" autocomplete="off" placeholder="> 粘贴 Kimi API Key（sk-...）" />
+        <input type="text" id="keyInput" class="pathinput" spellcheck="false" autocomplete="off" placeholder="> 粘贴 DeepSeek API Key（sk-...）" />
       </div>
       <div class="row" style="margin-top: 10px;">
         <button class="primary" id="btnImportKey">IMPORT KEY</button>
@@ -153,9 +153,9 @@
         <textarea id="cfgText" spellcheck="false" placeholder='> paste settings.json
 {
   "env": {
-    "ANTHROPIC_BASE_URL": "https://api.moonshot.cn/anthropic",
+    "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
     "ANTHROPIC_AUTH_TOKEN": "sk-...",
-    "ANTHROPIC_MODEL": "kimi-k2-turbo-preview"
+    "ANTHROPIC_MODEL": "deepseek-v4-pro[1m]"
   }
 }'></textarea>
         <div class="row" style="margin-top: 10px;">
@@ -214,7 +214,7 @@
         const r = await fetch("/api/sysinfo");
         const s = await r.json();
         $("sys").textContent = `· ${s.os}/${s.arch} · ${s.version}`;
-        document.title = `CODE-FORGE · Quick Installer ${s.version}`;
+        document.title = `Alan AI · Quick Installer ${s.version}`;
       } catch { $("sys").textContent = "· env?"; }
     }
 
@@ -267,7 +267,7 @@
           if (result.ok) {
             $("installBadge").textContent = "[ok] all ready";
             $("installBadge").className = "badge ok";
-            appendLog("\n✅ 环境就绪。下一步：\n  1. 在下方 [import_config] 粘贴现场发的 Kimi API Key\n  2. 打开新终端，输入 claude 开始使用\n  ⚠ claude 是命令行工具，需在终端中运行，不可直接双击\n");
+            appendLog("\n✅ 环境就绪。下一步：\n  1. 在下方 [import_config] 粘贴你的 DeepSeek API Key\n  2. 打开新终端，输入 claude 开始使用\n  ⚠ claude 是命令行工具，需在终端中运行，不可直接双击\n");
           } else {
             $("installBadge").textContent = `[!] ${result.failed} failed`;
             $("installBadge").className = "badge warn";
@@ -289,7 +289,7 @@
 
     $("btnImportKey").onclick = async () => {
       const key = $("keyInput").value.trim();
-      if (!key) return toast("请先粘贴现场发的 Kimi API Key", "err");
+      if (!key) return toast("请先粘贴 DeepSeek API Key", "err");
       if (/\s/.test(key)) return toast("Key 中含有空格或换行，请检查是否粘贴完整", "err");
       if (needOverwriteConfirm("key")) return;
       try {

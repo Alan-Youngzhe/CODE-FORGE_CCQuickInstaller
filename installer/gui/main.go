@@ -20,7 +20,7 @@ var Version = "dev"
 func main() {
 	app := NewApp()
 	err := wails.Run(&options.App{
-		Title:            "CODE-FORGE 一键安装器 " + Version,
+		Title:            "Alan AI 一键安装器 " + Version,
 		Width:            760,
 		Height:           620,
 		MinWidth:         640,

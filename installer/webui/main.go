@@ -29,7 +29,7 @@ func main() {
 	url := fmt.Sprintf("http://127.0.0.1:%d", port)
 
 	fmt.Println("==========================================")
-	fmt.Printf("  CODE-FORGE  Quick Installer  %s\n", Version)
+	fmt.Printf("  Alan AI  Quick Installer  %s\n", Version)
 	fmt.Println("==========================================")
 	fmt.Printf("\n>> %s\n", url)
 	fmt.Println("正在打开浏览器，稍候...")
