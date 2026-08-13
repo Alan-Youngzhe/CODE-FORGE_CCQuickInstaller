@@ -8,3 +8,4 @@
 
 # 系统垃圾
 .DS_Store
+.gstack/
