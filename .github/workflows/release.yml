@@ -101,13 +101,13 @@ jobs:
             打开终端，粘贴以下命令回车即可（国内推荐，入口也走加速镜像）：
 
             ```bash
-            curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/Alan-Youngzhe/CC_quick_installer/main/install.sh | bash
+            curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/Alan-Youngzhe/AlanAI_CCQuickInstaller/main/install.sh | bash
             ```
 
             有梯子或镜像不可用时，可用直连版：
 
             ```bash
-            curl -fsSL https://raw.githubusercontent.com/Alan-Youngzhe/CC_quick_installer/main/install.sh | bash
+            curl -fsSL https://raw.githubusercontent.com/Alan-Youngzhe/AlanAI_CCQuickInstaller/main/install.sh | bash
             ```
 
             ### macOS — 备选：手动下载
@@ -132,7 +132,7 @@ jobs:
             国内下载慢可用加速直链：
 
             ```
-            https://ghfast.top/https://github.com/Alan-Youngzhe/CC_quick_installer/releases/latest/download/CCQuickInstaller-win-x64.exe
+            https://ghfast.top/https://github.com/Alan-Youngzhe/AlanAI_CCQuickInstaller/releases/latest/download/CCQuickInstaller-win-x64.exe
             ```
 
             ---

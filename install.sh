@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="Alan-Youngzhe/CC_quick_installer"
+REPO="Alan-Youngzhe/AlanAI_CCQuickInstaller"
 BINARY_NAME="CCQuickInstaller-mac"
 INSTALL_PATH="/tmp/CCQuickInstaller-mac"
 

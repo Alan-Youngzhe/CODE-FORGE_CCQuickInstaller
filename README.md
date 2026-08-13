@@ -11,19 +11,19 @@
 打开终端，粘贴以下命令（**国内推荐**，连入口脚本都走加速镜像，全程免梯子）：
 
 ```bash
-curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/Alan-Youngzhe/CC_quick_installer/main/install.sh | bash
+curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/Alan-Youngzhe/AlanAI_CCQuickInstaller/main/install.sh | bash
 ```
 
 脚本自动下载安装器（同样走镜像）、解除 Gatekeeper 隔离、打开浏览器界面，全程无需手动操作。
 
 > 有梯子或镜像偶发不可用时，可用直连版：
 > ```bash
-> curl -fsSL https://raw.githubusercontent.com/Alan-Youngzhe/CC_quick_installer/main/install.sh | bash
+> curl -fsSL https://raw.githubusercontent.com/Alan-Youngzhe/AlanAI_CCQuickInstaller/main/install.sh | bash
 > ```
 
 ### macOS — 备选：手动下载
 
-前往 [Releases](https://github.com/Alan-Youngzhe/CC_quick_installer/releases/latest) 下载 `CCQuickInstaller-mac`，然后在终端执行：
+前往 [Releases](https://github.com/Alan-Youngzhe/AlanAI_CCQuickInstaller/releases/latest) 下载 `CCQuickInstaller-mac`，然后在终端执行：
 
 ```bash
 cd ~/Downloads
@@ -35,11 +35,11 @@ chmod +x CCQuickInstaller-mac
 > ⚠️ 必须先 `cd ~/Downloads` 进入下载目录，再运行命令。
 >
 > 🌐 GitHub 下载页国内打不开时，用加速镜像直接下载二进制：
-> `https://ghfast.top/https://github.com/Alan-Youngzhe/CC_quick_installer/releases/latest/download/CCQuickInstaller-mac`
+> `https://ghfast.top/https://github.com/Alan-Youngzhe/AlanAI_CCQuickInstaller/releases/latest/download/CCQuickInstaller-mac`
 
 ### Windows（双击运行）
 
-下载 [Releases](https://github.com/Alan-Youngzhe/CC_quick_installer/releases/latest) 中的 `CCQuickInstaller-vX.X.X-win-x64.exe`，双击打开图形界面。
+下载 [Releases](https://github.com/Alan-Youngzhe/AlanAI_CCQuickInstaller/releases/latest) 中的 `CCQuickInstaller-vX.X.X-win-x64.exe`，双击打开图形界面。
 
 ---
 
