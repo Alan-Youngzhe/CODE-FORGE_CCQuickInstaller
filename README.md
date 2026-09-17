@@ -20,7 +20,7 @@
 
 <!-- TODO: Windows GUI 截图 docs/screenshots/gui-windows.png（需在 Windows 上截取） -->
 
-**为什么做这个**：在活动现场帮几十位新手装 Claude Code 时，卡点集中在三处——没有管理员权限、GitHub 和 npm 下载超时、不会改 `settings.json`。这个安装器把三件事都收掉：所有写入落在用户目录，下载全走国内镜像，配置只需粘贴一个 API Key。已发布 10 个版本，20+ 位真实用户在用。
+**为什么做这个**：在活动现场帮几十位新手装 Claude Code 时，卡点集中在三处——没有管理员权限、GitHub 和 npm 下载超时、不会改 `settings.json`。这个安装器把三件事都收掉：所有写入落在用户目录，下载全走国内镜像，配置只需粘贴一个 API Key。已发布 10 个版本，50+ 位真实用户在用。
 ---
 
 ## 快速开始
